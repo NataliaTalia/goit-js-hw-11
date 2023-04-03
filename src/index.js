@@ -14,11 +14,11 @@ loadMoreBtnRef.addEventListener('click', onClick);
 
 async function onSubmit (e) {
 e.preventDefault();
-imagesApiService.query = e.target.elements.searchQuery.value;
+imagesApiService.query = e.target.elements.searchQuery.value.trim();
 
 imagesApiService.resetPage();
 
-imagesApiService.fetchImages().then (renderImages);
+imagesApiService.fetchImages().then(renderImages);
 
 
 
@@ -27,38 +27,40 @@ imagesApiService.fetchImages().then (renderImages);
 
 async function onClick () {
    
-    imagesApiService.fetchImages().then (renderImages);
+    imagesApiService.fetchImages().then(renderImages);
 }
 
 
-function createMarkup(data) {
-    //create a function that will insert a mark up with images, 40 per page 
-const {webformatURL, largeImageURL, tags, likes, views, comments, downloads} = data;
+function createMarkup(images) {
+    return images.map(image => {
+        const { webformatURL, tags, likes, views, comments, downloads } = image;
+    
+        return `
+          <div class="photo-card">
+            <img src="${webformatURL}" alt="${tags}" loading="lazy" width ="300px" height ="200px"/>
+            <div class="info">
+              <p class="info-item">
+                <b>Likes ${likes}</b>
+              </p>
+              <p class="info-item">
+                <b>Views ${views}</b>
+              </p>
+              <p class="info-item">
+                <b>Comments ${comments}</b>
+              </p>
+              <p class="info-item">
+                <b>Downloads ${downloads}</b>
+              </p>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
 
-return (markup = `
-<div class="photo-card">
-  <img src="${webformatURL}" alt="${tags}" loading="lazy" />
-  <div class="info">
-    <p class="info-item">
-      <b>Likes ${likes}</b>
-    </p>
-    <p class="info-item">
-      <b>Views ${views}</b>
-    </p>
-    <p class="info-item">
-      <b>Comments ${comments}</b>
-    </p>
-    <p class="info-item">
-      <b>Downloads ${downloads}</b>
-    </p>
-  </div>
-</div>
-`)
 
-}
 
-function renderImages(data) {
-    galleryRef.insertAdjacentHTML('afterbegin', createMarkup(data));
+function renderImages(images) {
+    galleryRef.insertAdjacentHTML('afterbegin', createMarkup(images));
 }
 
 

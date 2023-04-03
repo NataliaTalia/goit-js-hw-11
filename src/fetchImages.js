@@ -29,7 +29,7 @@ export default class ImagesApiService {
         try {
           const response = await axios.get(`${BASE_URL}?${searchParams}`);
           this.page += 1;
-          console.log('After fetch', response)
+          console.log('After fetch', response.data.hits)
           return response.data.hits;
     
         } catch (error) {
