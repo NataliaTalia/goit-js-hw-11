@@ -26,3 +26,14 @@
   background-size: cover;
   background-position: center;
 }
+
+.is-hidden {
+  display: none;
+}
+
+.gallery {
+  
+  flex-wrap: wrap;
+  display: flex;
+  gap: 40px;
+}

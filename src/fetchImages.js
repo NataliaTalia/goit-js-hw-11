@@ -1,53 +1,55 @@
-import axios from "axios";
-
-
+import axios from 'axios';
 
 export default class ImagesApiService {
-  constructor () {
+  constructor() {
     this.searchQuery = '';
     this.page = 1;
-  };
+    
+
+  }
 
   async fetchImages() {
-    console.log('Before fetch', this)
+    console.log('Before fetch', this);
     const BASE_URL = `https://pixabay.com/api/`;
     const API_KEY = `34942352-0200edd486f0f1b00fc000a19`;
-    
-    const searchParams = new URLSearchParams ({
-    
-    key: API_KEY,
-    q: this.searchQuery,
-    image_type: "photo",
-    orientation: "horizontal",
-    safesearch: true,
-    page: this.page,
-    per_page: 40,
-    
-    
-    
-    })
-        try {
-          const response = await axios.get(`${BASE_URL}?${searchParams}`);
-          this.page += 1;
-          console.log('After fetch', response.data.hits)
-          return response.data.hits;
-    
-        } catch (error) {
-          console.error(error);
-        }
-      }
+    const PER_PAGE = 40;
 
-      resetPage() {
-        this.page = 1;
-      }
-
-    get query () {
-      return this.searchQuery;
+    const searchParams = new URLSearchParams({
+      key: API_KEY,
+      q: this.searchQuery,
+      image_type: 'photo',
+      orientation: 'horizontal',
+      safesearch: true,
+      page: this.page,
+      per_page: PER_PAGE,
+    });
+    try {
+      const response = await axios.get(`${BASE_URL}?${searchParams}`);
+      this.page += 1;
+      // if(this.perPage*this.page >= response.data.dataHits){
+      //   Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
+      // }
+      console.log('After fetch', response.data);
+      return response.data.hits;
+    } catch (error) {
+      console.error(error);
     }
+  }
 
-    set query (newQuery) {
-      return this.searchQuery = newQuery;
-    }
+ 
+  resetPage() {
+    this.page = 1;
+   
+  }
+
+  get query() {
+    return this.searchQuery;
+
+  }
+
+  set query(newQuery) {
+    return (this.searchQuery = newQuery);
+  }
 }
 
 // export default async function fetchImages(searchQuery) {
@@ -62,8 +64,6 @@ export default class ImagesApiService {
 // image_type: "photo",
 // orientation: "horizontal",
 // safesearch: true,
-
-
 
 // })
 //     try {
