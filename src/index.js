@@ -75,6 +75,7 @@ function createMarkup(images) {
 }
 
 function renderImages(images) {
+ 
     if(images.total === 0) {
         Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
         loadMoreBtnRef.classList.add('is-hidden');
@@ -83,7 +84,7 @@ function renderImages(images) {
     loadMoreBtnRef.classList.remove('is-hidden');
     galleryRef.insertAdjacentHTML('beforeend', createMarkup(images));
 
-    if(images.hits.length*imagesApiService.page >= images.totalHits&& images.total > 0) {
+    if(images.hits.length >= images.totalHits && images.total > 0) {
         Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.")
         loadMoreBtnRef.classList.add('is-hidden');
     }
