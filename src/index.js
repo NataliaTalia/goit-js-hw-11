@@ -84,8 +84,11 @@ function renderImages(images) {
     loadMoreBtnRef.classList.remove('is-hidden');
     galleryRef.insertAdjacentHTML('beforeend', createMarkup(images));
 
-    if(images.hits.length >= images.totalHits) {
-        Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.")
-        loadMoreBtnRef.classList.add('is-hidden');
+    if (images.hits.length * imagesApiService.page >= images.totalHits && images.totalHits > 0) {
+        const remainingItems = images.totalHits - (images.hits.length * imagesApiService.page);
+        if (remainingItems < 40) {
+            Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
+            loadMoreBtnRef.classList.add('is-hidden');
+        }
     }
 }
