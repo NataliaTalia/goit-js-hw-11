@@ -13,22 +13,40 @@ loadMoreBtnRef.addEventListener('click', onClick);
 async function onSubmit(e) {
   e.preventDefault();
   imagesApiService.query = e.target.elements.searchQuery.value.trim();
-
+ 
+  if(e.target.elements.searchQuery.value.trim() === "") {
+    return
+  }
 
   imagesApiService.resetPage();
   galleryRef.innerHTML = '';
+
+  try {
+    const images = await imagesApiService.fetchImages();
+    renderImages(images);
+  } catch (error) {
+    console.error(error);
+    Notiflix.Notify.failure('Десь помилка');
+  }
+//   imagesApiService.fetchImages().then(renderImages);
   
-  imagesApiService.fetchImages().then(renderImages);
-  loadMoreBtnRef.classList.remove('is-hidden');
 }
 
 async function onClick() {
+
     console.log('Load more is clicked')
-  imagesApiService.fetchImages().then(renderImages);
+    try {
+        const images = await imagesApiService.fetchImages();
+        renderImages(images);
+    } catch (error) {
+console.error(error)
+Notiflix.Notify.failure('Десь помилка');
+    }
+//   imagesApiService.fetchImages().then(renderImages);
 }
 
 function createMarkup(images) {
-  return images
+  return images.hits
     .map(image => {
       const { webformatURL, tags, likes, views, comments, downloads } = image;
 
@@ -57,9 +75,16 @@ function createMarkup(images) {
 }
 
 function renderImages(images) {
-    if(images.length === 0) {
-        Notiflix.Notify.failure('Such image doesnt exist. Try smng else');
+    if(images.total === 0) {
+        Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+        loadMoreBtnRef.classList.add('is-hidden');
     } 
-
+         
+    loadMoreBtnRef.classList.remove('is-hidden');
     galleryRef.insertAdjacentHTML('beforeend', createMarkup(images));
+
+    if(images.hits.length*imagesApiService.page >= images.totalHits&& images.total > 0) {
+        Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.")
+        loadMoreBtnRef.classList.add('is-hidden');
+    }
 }

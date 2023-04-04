@@ -30,7 +30,7 @@ export default class ImagesApiService {
       //   Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
       // }
       console.log('After fetch', response.data);
-      return response.data.hits;
+      return response.data;
     } catch (error) {
       console.error(error);
     }
