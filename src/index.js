@@ -74,21 +74,24 @@ function createMarkup(images) {
     .join('');
 }
 
-function renderImages(images) {
- 
-    if(images.total === 0) {
-        Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
-        loadMoreBtnRef.classList.add('is-hidden');
-    } 
-         
+
+  function renderImages(images) {
+    if (images.total === 0) {
+      Notiflix.Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+      loadMoreBtnRef.classList.add('is-hidden');
+      return;
+    }
+  
     loadMoreBtnRef.classList.remove('is-hidden');
     galleryRef.insertAdjacentHTML('beforeend', createMarkup(images));
-
-    if (images.hits.length * imagesApiService.page >= images.totalHits && images.totalHits > 0) {
-        const remainingItems = images.totalHits - (images.hits.length * imagesApiService.page);
-        if (remainingItems < 40) {
-            Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
-            loadMoreBtnRef.classList.add('is-hidden');
-        }
+  
+    if (images.totalHits / 40 < imagesApiService.page - 1) {
+      Notiflix.Notify.info(
+        "We're sorry, but you've reached the end of search results."
+      );
+      loadMoreBtnRef.classList.add('is-hidden');
     }
-}
+  }
+
